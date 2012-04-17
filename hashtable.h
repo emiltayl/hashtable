@@ -2,6 +2,7 @@
 #define HASHTABLE_H_
 
 #define HASHTABLE_DEFAULT_SIZE 128
+#define HASHTABLE_GROW_SIZE 0.75
 
 typedef struct _ht_list {
 	char *string;
