@@ -31,8 +31,7 @@ hash_table *getNewHashTable(int size) {
     hashTable->allocatedBlocks = size;
 
     for (i = 0; i < size; i++) {
-        hashTable->elements[i]->string = NULL;
-        hashTable->elements[i]->next = NULL;
+		hashTable->elements[i] = NULL;
     }
 
     hashTable->size = size;
@@ -42,6 +41,7 @@ hash_table *getNewHashTable(int size) {
     }
 
     hashTable->nextSplit = 0;
+	hashTable->enteredElements = 0;
 
     return hashTable;
 }
