@@ -2,6 +2,7 @@
 #define HASHTABLE_H_
 
 #define HASHTABLE_DEFAULT_SIZE 128
+#define HASHTABLE_BLOCK_ALLOCATE_SIZE 64
 #define HASHTABLE_GROW_SIZE 0.75
 
 typedef struct _ht_list {
@@ -11,6 +12,7 @@ typedef struct _ht_list {
 
 typedef struct _hash_table {
 	int size;
+    int allocatedBlocks;
 	int elements;
 	int exponent;
 	int nextSplit;
