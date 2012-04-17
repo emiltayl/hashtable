@@ -13,10 +13,10 @@ typedef struct _ht_list {
 typedef struct _hash_table {
 	int size;
     int allocatedBlocks;
-	int elements;
+	int enteredElements;
 	int exponent;
 	int nextSplit;
-	ht_list ** elements;
+	ht_list * elements;
 } hash_table;
 
 unsigned int getHash(hash_table *, char *);
