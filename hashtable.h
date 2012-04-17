@@ -16,6 +16,7 @@ typedef struct _hash_table {
 	ht_list ** elements;
 } hash_table;
 
+unsigned int getHash(hash_table *, char *);
 unsigned int getPosition(hash_table *, char *);
 hash_table *getNewHashTable(int);
 #define getNewHashTable() getNewHashTable(HASHTABLE_DEFAULT_SIZE)
