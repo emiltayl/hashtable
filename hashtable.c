@@ -8,5 +8,5 @@ unsigned int getHash(hash_table *hashTable, char *string) {
 		string++;
 	}
 
-	return hashValue % hashTable->size;
+	return hashValue % hashTable->size; //TODO: We're not actually supposed to use size
 }
