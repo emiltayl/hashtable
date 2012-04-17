@@ -59,3 +59,17 @@ int hasElement(hash_table *hashTable, char *string) {
 
     return 0; 
 }
+
+ht_list *getElement(hash_table *hashTable, char *string) {
+    int position = getPosition(hashTable, string);
+    ht_list *list = hashTable->elements[position];
+
+    while (list != NULL) {
+        if (strcmp(string, list->string) == 0) {
+            return list;
+        }
+        list = list->next;
+    }
+
+    return NULL;
+}
