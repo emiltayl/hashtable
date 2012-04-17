@@ -10,6 +10,9 @@ typedef struct _ht_list {
 
 typedef struct _hash_table {
 	int size;
+	int elements;
+	int exponent;
+	int nextSplit;
 	ht_list ** elements;
 } hash_table;
 
