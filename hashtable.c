@@ -45,3 +45,17 @@ hash_table *getNewHashTable(int size) {
 
     return hashTable;
 }
+
+int hasElement(hash_table *hashTable, char *string) {
+    int position = getPosition(hashTable, string);
+    ht_list *list = hashTable->elements[position];
+
+    while (list != NULL) {
+        if (strcmp(string, list->string) == 0) {
+            return 1;
+        }
+        list = list->next;
+    }
+
+    return 0; 
+}
