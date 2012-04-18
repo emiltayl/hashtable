@@ -16,7 +16,9 @@ typedef struct _hash_table {
 	int enteredElements;
 	int exponent;
 	int nextSplit;
-	ht_list * elements;
+    int free_extra_list_elements;
+	ht_list *elements;
+    ht_list *extra_list_elements;
 } hash_table;
 
 unsigned int getHash(hash_table *, char *);

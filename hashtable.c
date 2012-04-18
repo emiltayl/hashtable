@@ -28,6 +28,8 @@ hash_table *getNewHashTable(int size) {
     int i;
     hash_table *hashTable = (hash_table *) malloc(sizeof(hash_table));
     hashTable->elements = (ht_list *) malloc(sizeof(ht_list) * size);
+    hastTable->extra_list_elements = (ht_list *) malloc(sizeof(ht_list) * HASHTABLE_BLOCK_ALLOCATE_SIZE);
+    hashTable->free_extra_list_elements = HASHTABLE_BLOCK_ALLOCATE_SIZE;
     hashTable->allocatedBlocks = size;
 
     for (i = 0; i < size; i++) {
