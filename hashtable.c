@@ -26,6 +26,9 @@ unsigned int get_hash_table_position(hash_table_t *hash_table, char *string) {
 }
 
 hash_table_t *get_hash_table(int size) {
+    if (size < 1) {
+        return NULL; //We don't want to have to deal with the special case of empty tables
+    }
     int i;
 
     hash_table_t *hash_table = (hash_table_t *) malloc(sizeof(hash_table_t));
@@ -44,6 +47,7 @@ hash_table_t *get_hash_table(int size) {
     }
 
     hash_table->size = size;
+    hash_table->exponent = 0;
 
     for (i = size; i > 1; i >> 1) {
         hash_table->exponent++;
@@ -104,9 +108,9 @@ hash_table_list_t *add_hash_table_element(hash_table_t *hash_table, char *string
 
     new_element->next = NULL;
 
-    ht_table_list_t **list_element = &hash_table->elements[position];
+    ht_table_list_t **list_element = &(hash_table->elements[position]);
     while (*list_element != NULL) {
-        *list_element = *list_element->next;
+        list_element = &(*list_element->next);
     }
 
     *list_element = new_element;
@@ -114,6 +118,13 @@ hash_table_list_t *add_hash_table_element(hash_table_t *hash_table, char *string
 
     if (((float) hash_table->n_elements/hash_table->size) > HASH_TABLE_GROW_SIZE) {
         //TODO: grow the table
+        hash_table_list_t *elements = (hash_table_list_t *) realloc(hash_table->elements, hash_table->size+sizeof(hash_table_list_t));
+        if (elements == NULL) {
+            //We couldn't increase the size of the list
+            return new_element;
+        }
+
+        hash_table->elements = elements;
     }
 
     return new_element;
