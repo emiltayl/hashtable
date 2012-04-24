@@ -27,7 +27,14 @@ unsigned int get_position(hash_table *hashTable, char *string) {
 hash_table *get_hash_table(int size) {
     int i;
     hash_table *hashTable = (hash_table *) malloc(sizeof(hash_table));
+    if (hashTable == NULL) {
+        return NULL;
+    }
     hashTable->elements = (ht_list *) malloc(sizeof(ht_list) * size);
+    if (hashTable->elements == NULL) {
+        free(hashTable);
+        return NULL;
+    }
 
     for (i = 0; i < size; i++) {
         hashTable->elements[i] = NULL;
