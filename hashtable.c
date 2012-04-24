@@ -1,6 +1,7 @@
 #include "hashtable.h"
 
 #include <stdlib.h>
+#include <string.h>
 
 unsigned int get_hash(char *string) {
 	unsigned int hash_value = 0;
@@ -80,4 +81,35 @@ hash_table_list_t *get_hash_table_element(hash_table_t *hash_table, char *string
     }
 
     return NULL;
+}
+
+hash_table_list_t *add_hash_table_element(hash_table_t *hash_table, char *string) {
+    if (has_hash_table_element(hash_table, string)) {
+        return get_hash_table_element(hash_table, string);
+    }
+
+    int position = get_hash_table_position(hash_table, string);
+    ht_table_list_t *new_element = malloc(ht_table_list_t);
+    if (new_element == NULL) {
+        return NULL;
+    }
+
+    int length = strlen(string) + 1;
+    new_element->string = (char *) malloc(sizeof(char) * length);
+    if (new_element->string == NULL) {
+        free(new_element);
+        return NULL;
+    }
+    memcpy(new_element->string, string, length);
+
+    new_element->next = NULL;
+
+    ht_table_list_t **list_element = &hash_table->elements[position];
+    while (*list_element != NULL) {
+        *list_element = *list_element->next;
+    }
+
+    *list_element = new_element;
+
+    return new_element;
 }
