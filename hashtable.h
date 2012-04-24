@@ -23,7 +23,7 @@ hash_table_t *get_hash_table(int);
 #define get_hash_table() get_hash_table(HASHTABLE_DEFAULT_SIZE)
 int has_hash_table_element(hash_table_t *, char *);
 hash_table_list_t *get_hash_table_element(hash_table_t *, char *);
-hash_table_list_t *add_hash_table_element(hash_table_t *, char *);
+void *add_hash_table_element(hash_table_t *, char *);
 void remove_hash_table_element(hash_table_t *, char *);
 void free_hash_table(hash_table_t *);
 
