@@ -2,59 +2,61 @@
 
 #include <stdlib.h>
 
-unsigned int get_hash(hash_table *hashTable, char *string) {
-	unsigned int hashValue = 0;
+unsigned int get_hash(char *string) {
+	unsigned int hash_value = 0;
 
 	while (*string != '\0') {
-		hashValue = *string + (hashValue << 5) - hashValue;
+		hash_value = *string + (hash_value << 5) - hash_value;
 		string++;
 	}
 
-	return hashValue;
+	return hash_value;
 }
 
-unsigned int get_position(hash_table *hashTable, char *string) {
-    int hashValue = get_hash(hashTable, string);
+unsigned int get_hash_table_position(hash_table_t *hash_table, char *string) {
+    int hash_value = get_hash(hash_table, string);
 
-    int position = hashValue % (1 << hashTable->exponent);
-    if (position < hashTable->nextSplit) {
-        position = hashValue % (1 << (hashTable->exponent + 1));
+    int position = hash_value % (1 << hash_table->exponent);
+    if (position < hash_table->next_split) {
+        position = hash_value % (1 << (hash_table->exponent + 1));
     }
     
     return position;
 }
 
-hash_table *get_hash_table(int size) {
+hash_table_t *get_hash_table(int size) {
     int i;
-    hash_table *hashTable = (hash_table *) malloc(sizeof(hash_table));
-    if (hashTable == NULL) {
+
+    hash_table_t *hash_table = (hash_table_t *) malloc(sizeof(hash_table_t));
+    if (hash_table == NULL) {
         return NULL;
     }
-    hashTable->elements = (ht_list *) malloc(sizeof(ht_list) * size);
-    if (hashTable->elements == NULL) {
-        free(hashTable);
+    
+    hash_table->elements = (hash_table_list_t *) malloc(sizeof(hash_table_list_t) * size);
+    if (hash_table->elements == NULL) {
+        free(hash_table);
         return NULL;
     }
 
     for (i = 0; i < size; i++) {
-        hashTable->elements[i] = NULL;
+        hash_table->elements[i] = NULL;
     }
 
-    hashTable->size = size;
+    hash_table->size = size;
 
     for (i = size; i > 1; i >> 1) {
-        hashTable->exponent++;
+        hash_table->exponent++;
     }
 
-    hashTable->nextSplit = 0;
-    hashTable->n_elements = 0;
+    hash_table->next_split = 0;
+    hash_table->n_elements = 0;
 
-    return hashTable;
+    return hash_table;
 }
 
-int has_element(hash_table *hashTable, char *string) {
-    int position = get_position(hashTable, string);
-    ht_list *list = hashTable->elements[position];
+int has_hash_table_element(hash_table_t *hash_table, char *string) {
+    int position = get_hash_table_position(hash_table, string);
+    hash_table_list_t *list = hash_table->elements[position];
 
     while (list != NULL) {
         if (strcmp(string, list->string) == 0) {
@@ -66,9 +68,9 @@ int has_element(hash_table *hashTable, char *string) {
     return 0; 
 }
 
-ht_list *get_element(hash_table *hashTable, char *string) {
-    int position = get_position(hashTable, string);
-    ht_list *list = hashTable->elements[position];
+hash_table_list_t *get_hash_table_element(hash_table_t *hash_table, char *string) {
+    int position = get_hash_table_position(hash_table, string);
+    hash_table_list_t *list = hash_table->elements[position];
 
     while (list != NULL) {
         if (strcmp(string, list->string) == 0) {
