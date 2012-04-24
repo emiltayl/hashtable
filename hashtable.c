@@ -3,11 +3,11 @@
 #include <stdlib.h>
 #include <string.h>
 
-unsigned int get_hash(char *string) {
-	unsigned int hash_value = 0;
+unsigned long get_hash(char *string) {
+	unsigned long hash_value = 5381;
 
 	while (*string != '\0') {
-		hash_value = *string + (hash_value << 5) - hash_value;
+		hash_value = *string + ((hash_value << 5) + hash_value);
 		string++;
 	}
 
@@ -15,7 +15,7 @@ unsigned int get_hash(char *string) {
 }
 
 unsigned int get_hash_table_position(hash_table_t *hash_table, char *string) {
-    int hash_value = get_hash(hash_table, string);
+    unsigned long hash_value = get_hash(hash_table, string);
 
     int position = hash_value % (1 << hash_table->exponent);
     if (position < hash_table->next_split) {
