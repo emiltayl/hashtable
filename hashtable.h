@@ -5,7 +5,7 @@
 #define HASHTABLE_GROW_SIZE 0.75
 
 typedef struct _hash_table_list {
-	char *string;
+	const char *string;
 	struct _hash_table_list *next;
 } hash_table_list_t;
 
