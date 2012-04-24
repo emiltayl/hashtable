@@ -117,14 +117,29 @@ hash_table_list_t *add_hash_table_element(hash_table_t *hash_table, char *string
     hash_table->n_elements++;
 
     if (((float) hash_table->n_elements/hash_table->size) > HASH_TABLE_GROW_SIZE) {
-        //TODO: grow the table
-        hash_table_list_t *elements = (hash_table_list_t *) realloc(hash_table->elements, hash_table->size+sizeof(hash_table_list_t));
+        //There are so many entries that we should grow the table
+        hash_table_list_t *elements = (hash_table_list_t *) realloc(hash_table->elements, hash_table->size + sizeof(hash_table_list_t));
         if (elements == NULL) {
             //We couldn't increase the size of the list
             return new_element;
         }
-
         hash_table->elements = elements;
+        hash_table->size++;
+
+        hash_table_list_t **old_element = &(hash_table->elements[hash_table->next_split]);
+        hash_table_list_t **new_element = &(hash_table->elements[hash_table->size-1]);
+
+        while (*old_element != NULL) {
+            if (get_hash_table_position(hash_table, *old_element->string) != hash_table->next_split) {
+                *new_element = *old_element;
+                old_element = &(*old_element->next);
+                *new_element->next = null;
+                new_element = &(*new_element->next);
+            } else {
+                old_element = &(*old_element->next);
+            }
+        }
+        //TODO Check exponent and increase it and reset next_split if necessary
     }
 
     return new_element;
