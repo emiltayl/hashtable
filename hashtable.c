@@ -110,6 +110,11 @@ hash_table_list_t *add_hash_table_element(hash_table_t *hash_table, char *string
     }
 
     *list_element = new_element;
+    hash_table->n_elements++;
+
+    if (((float) hash_table->n_elements/hash_table->size) > HASH_TABLE_GROW_SIZE) {
+        //TODO: grow the table
+    }
 
     return new_element;
 }
