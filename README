@@ -1,0 +1,9 @@
+This project is a simple thing I put together to get an understanding of how
+hash tables work, and to see if I could put it all together myself.
+
+It is not very advanced, as I've tried to keep things at a bare minimum of what
+is required of it. Currently it is not possible to store anything to keys, but
+adding that posibility should not be much harder than adding an extra field to
+hash_table_list_t and modifying the functions to set the field.
+
+I do not claim any rights over this code.
