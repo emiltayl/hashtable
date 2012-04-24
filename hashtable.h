@@ -1,32 +1,30 @@
 #ifndef HASTABLE_H_
 #define HASHTABLE_H_
 
-#define HASHTABLE_DEFAULT_SIZE 128
-#define HASHTABLE_BLOCK_ALLOCATE_SIZE 64
-#define HASHTABLE_GROW_SIZE 0.75
+#define HASH_TABLE_DEFAULT_SIZE 128
+#define HASH_TABLE_GROW_SIZE 0.75
 
-typedef struct _ht_list {
-	char *string;
-	struct _ht_list *next;
-} ht_list;
+typedef struct _hash_table_list {
+	const char *string;
+	struct _hash_table_list *next;
+} hash_table_list_t;
 
 typedef struct _hash_table {
 	int size;
-    int allocatedBlocks;
-	int enteredElements;
+	int n_elements;
 	int exponent;
-	int nextSplit;
-	ht_list * elements;
-} hash_table;
+	int next_split;
+	hash_table_list_t *elements;
+} hash_table_t;
 
-unsigned int getHash(hash_table *, char *);
-unsigned int getPosition(hash_table *, char *);
-hash_table *getNewHashTable(int);
-#define getNewHashTable() getNewHashTable(HASHTABLE_DEFAULT_SIZE)
-int hasElement(hash_table *, char *);
-ht_list *getElement(hash_table *, char *);
-ht_list *addElement(hash_table *, char *);
-void removeElement(hash_table *, char *);
-void freeTable(hash_table *);
+unsigned int get_hash(char *);
+unsigned int get_hash_table_position(hash_table_t *, char *);
+hash_table_t *get_hash_table(int);
+#define get_hash_table() get_hash_table(HASH_TABLE_DEFAULT_SIZE)
+int has_hash_table_element(hash_table_t *, char *);
+hash_table_list_t *get_hash_table_element(hash_table_t *, char *);
+hash_table_list_t *add_hash_table_element(hash_table_t *, char *);
+void remove_hash_table_element(hash_table_t *, char *);
+void free_hash_table(hash_table_t *);
 
 #endif /*HASHTABLE_H_*/
