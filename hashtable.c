@@ -125,6 +125,7 @@ hash_table_list_t *add_hash_table_element(hash_table_t *hash_table, char *string
             return new_element;
         }
         hash_table->elements = elements;
+		hash_table->elements[hash_table->size] = NULL;
         hash_table->size++;
 
         hash_table_list_t **old_element = &(hash_table->elements[hash_table->next_split]);
