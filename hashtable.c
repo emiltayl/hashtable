@@ -110,7 +110,7 @@ hash_table_list_t *add_hash_table_element(hash_table_t *hash_table, char *string
 
     hash_table_list_t **list_element = &(hash_table->elements[position]);
     while (*list_element != NULL) {
-        list_element = &(*list_element->next);
+        list_element = &((*list_element)->next);
     }
 
     *list_element = new_element;
@@ -133,11 +133,11 @@ hash_table_list_t *add_hash_table_element(hash_table_t *hash_table, char *string
         while (*old_element != NULL) {
             if (get_hash_table_position(hash_table, *old_element->string) != hash_table->next_split) {
                 *new_element = *old_element;
-                old_element = &(*old_element->next);
+                old_element = &((*old_element)->next);
                 *new_element->next = null;
-                new_element = &(*new_element->next);
+                new_element = &((*new_element)->next);
             } else {
-                old_element = &(*old_element->next);
+                old_element = &((*old_element)->next);
             }
         }
         hash_table->next_split++;
