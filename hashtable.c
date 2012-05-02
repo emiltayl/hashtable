@@ -178,7 +178,7 @@ void remove_hash_table_element(hash_table_t *hash_table, char *string) {
 void free_hash_table(hash_table_t *hash_table) {
     int i;
     hash_table_list_t *list_item, next;
-    for (int i = 0; i < size; i++) {
+    for (i = 0; i < size; i++) {
         list_item = hash_table->elements[i];
         while (list_item != NULL) {
             next = list_item->next;
