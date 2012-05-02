@@ -17,7 +17,7 @@ unsigned long get_hash(char *string) {
 unsigned int get_hash_table_position(hash_table_t *hash_table, char *string) {
     unsigned long hash_value = get_hash(hash_table, string);
 
-    int position = hash_value % (1 << hash_table->exponent);
+    unsigned int position = hash_value % (1 << hash_table->exponent);
     if (position < hash_table->next_split) {
         position = hash_value % (1 << (hash_table->exponent + 1));
     }
@@ -60,7 +60,7 @@ hash_table_t *get_hash_table(int size) {
 }
 
 int has_hash_table_element(hash_table_t *hash_table, char *string) {
-    int position = get_hash_table_position(hash_table, string);
+    unsigned int position = get_hash_table_position(hash_table, string);
     hash_table_list_t *list = hash_table->elements[position];
 
     while (list != NULL) {
@@ -74,7 +74,7 @@ int has_hash_table_element(hash_table_t *hash_table, char *string) {
 }
 
 hash_table_list_t *get_hash_table_element(hash_table_t *hash_table, char *string) {
-    int position = get_hash_table_position(hash_table, string);
+    unsigned int position = get_hash_table_position(hash_table, string);
     hash_table_list_t *list = hash_table->elements[position];
 
     while (list != NULL) {
@@ -92,7 +92,7 @@ hash_table_list_t *add_hash_table_element(hash_table_t *hash_table, char *string
         return get_hash_table_element(hash_table, string);
     }
 
-    int position = get_hash_table_position(hash_table, string);
+    unsigned int position = get_hash_table_position(hash_table, string);
     ht_table_list_t *new_element = malloc(ht_table_list_t);
     if (new_element == NULL) {
         return NULL;
@@ -147,4 +147,27 @@ hash_table_list_t *add_hash_table_element(hash_table_t *hash_table, char *string
     }
 
     return new_element;
+}
+
+void remove_hash_table_element(hash_table_t *hash_table, char *string) {
+    //TODO: Possibly shrink the table when it is filled less than x%?
+    unsigned int position = get_hash_table_position(hash_table, string);
+    
+    hash_table_list_t *prev = NULL;
+    hash_table_list_t *list = hash_table->elements[position];
+    while (list != NULL) {
+        if (strcmp(string, list->string) == 0) {
+            if (prev != NULL) {
+                prev->next = list->next;
+            } else {
+                hash_table->elements[position] = list->next;
+            }
+
+            free(list);
+            break;
+        }
+
+        prev = list;
+        list = list->next;
+    }
 }
