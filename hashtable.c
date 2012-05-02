@@ -174,3 +174,19 @@ void remove_hash_table_element(hash_table_t *hash_table, char *string) {
         list = list->next;
     }
 }
+
+void free_hash_table(hash_table_t *hash_table) {
+    int i;
+    ht_table_list_t *list_item, next;
+    for (int i = 0; i < size; i++) {
+        list_item = hash_table->elements[i];
+        while (list_item != NULL) {
+            next = list_item->next;
+            free(list_item->string);
+            free(list_item);
+            list_item = next;
+        }
+    }
+    free(hash_table->elements);
+    free(hash_table);
+}
