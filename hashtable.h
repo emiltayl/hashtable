@@ -13,7 +13,7 @@ typedef struct _hash_table {
 	int n_elements;
 	int exponent;
 	int next_split;
-	hash_table_list_t *elements;
+	hash_table_list_t **elements;
 } hash_table_t;
 
 unsigned long get_hash(char *);

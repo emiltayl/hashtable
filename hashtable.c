@@ -36,7 +36,7 @@ hash_table_t *get_hash_table(int size) {
         return NULL;
     }
     
-    hash_table->elements = (hash_table_list_t *) malloc(sizeof(hash_table_list_t) * size);
+    hash_table->elements = (hash_table_list_t **) malloc(sizeof(hash_table_list_t) * size);
     if (hash_table->elements == NULL) {
         free(hash_table);
         return NULL;
