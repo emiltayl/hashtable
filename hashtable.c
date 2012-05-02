@@ -140,9 +140,11 @@ hash_table_list_t *add_hash_table_element(hash_table_t *hash_table, char *string
                 old_element = &(*old_element->next);
             }
         }
+        hash_table->next_split++;
         
         if ((1 << hash_table->exponent) >= hash_table->size) {
             hash_table->exponent++;
+            hash_table->next_split = 0;
         }
     }
 
@@ -164,6 +166,7 @@ void remove_hash_table_element(hash_table_t *hash_table, char *string) {
             }
 
             free(list);
+            hash_table->n_elements--;
             break;
         }
 
