@@ -166,6 +166,7 @@ void remove_hash_table_element(hash_table_t *hash_table, char *string) {
                 hash_table->elements[position] = list->next;
             }
 
+			free(list->string);
             free(list);
             hash_table->n_elements--;
             break;
