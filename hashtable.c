@@ -108,7 +108,7 @@ hash_table_list_t *add_hash_table_element(hash_table_t *hash_table, char *string
 
     new_element->next = NULL;
 
-    ht_table_list_t **list_element = &(hash_table->elements[position]);
+    hash_table_list_t **list_element = &(hash_table->elements[position]);
     while (*list_element != NULL) {
         list_element = &(*list_element->next);
     }
@@ -177,7 +177,7 @@ void remove_hash_table_element(hash_table_t *hash_table, char *string) {
 
 void free_hash_table(hash_table_t *hash_table) {
     int i;
-    ht_table_list_t *list_item, next;
+    hash_table_list_t *list_item, next;
     for (int i = 0; i < size; i++) {
         list_item = hash_table->elements[i];
         while (list_item != NULL) {
