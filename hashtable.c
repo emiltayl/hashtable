@@ -118,7 +118,7 @@ hash_table_list_t *add_hash_table_element(hash_table_t *hash_table, char *string
 
     if (((float) hash_table->n_elements/hash_table->size) > HASH_TABLE_GROW_SIZE) {
         //There are so many entries that we should grow the table
-        hash_table_list_t **elements = (hash_table_list_t **) realloc(hash_table->elements, hash_table->size + sizeof(hash_table_list_t));
+        hash_table_list_t **elements = (hash_table_list_t **) realloc(hash_table->elements, (hash_table->size + 1) * sizeof(hash_table_list_t));
         if (elements == NULL) {
             //We couldn't increase the size of the list, maybe we should have
             //a way of handling errors?
