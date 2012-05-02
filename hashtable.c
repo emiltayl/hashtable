@@ -93,7 +93,7 @@ hash_table_list_t *add_hash_table_element(hash_table_t *hash_table, char *string
     }
 
     unsigned int position = get_hash_table_position(hash_table, string);
-    hash_table_list_t *new_element = malloc(hash_table_list_t);
+	hash_table_list_t *new_element = (hash_table_list_t *) malloc(sizeof(hash_table_list_t));
     if (new_element == NULL) {
         return NULL;
     }
