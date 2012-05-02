@@ -49,7 +49,7 @@ hash_table_t *get_hash_table(int size) {
     hash_table->size = size;
     hash_table->exponent = 0;
 
-    for (i = size; i > 1; i >> 1) {
+    for (i = size; i > 1; i = i >> 1) {
         hash_table->exponent++;
     }
 
