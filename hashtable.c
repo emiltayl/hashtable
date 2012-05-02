@@ -134,7 +134,7 @@ hash_table_list_t *add_hash_table_element(hash_table_t *hash_table, char *string
             if (get_hash_table_position(hash_table, (*old_element)->string) != hash_table->next_split) {
                 *new_element = *old_element;
                 old_element = &((*old_element)->next);
-                *new_element->next = null;
+                (*new_element)->next = null;
                 new_element = &((*new_element)->next);
             } else {
                 old_element = &((*old_element)->next);
