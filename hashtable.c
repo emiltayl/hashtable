@@ -15,7 +15,7 @@ unsigned long get_hash(char *string) {
 }
 
 unsigned int get_hash_table_position(hash_table_t *hash_table, char *string) {
-    unsigned long hash_value = get_hash(hash_table, string);
+    unsigned long hash_value = get_hash(string);
 
     unsigned int position = hash_value % (1 << hash_table->exponent);
     if (position < hash_table->next_split) {
