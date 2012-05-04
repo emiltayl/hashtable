@@ -16,13 +16,13 @@ typedef struct _hash_table {
 	hash_table_list_t **elements;
 } hash_table_t;
 
-unsigned long get_hash(char *);
-unsigned int get_hash_table_position(hash_table_t *, char *);
-hash_table_t *get_hash_table(int);
-int has_hash_table_element(hash_table_t *, char *);
-hash_table_list_t *get_hash_table_element(hash_table_t *, char *);
-hash_table_list_t *add_hash_table_element(hash_table_t *, char *);
-void remove_hash_table_element(hash_table_t *, char *);
-void free_hash_table(hash_table_t *);
+unsigned long hash_get_value(char *);
+unsigned int hash_table_get_position(hash_table_t *, char *);
+hash_table_t *hash_table_create(int);
+int hash_table_has_element(hash_table_t *, char *);
+hash_table_list_t *hash_table_get_element(hash_table_t *, char *);
+hash_table_list_t *hash_table_add_element(hash_table_t *, char *);
+void hash_table_remove_element(hash_table_t *, char *);
+void hash_table_free(hash_table_t *);
 
 #endif /*HASHTABLE_H_*/

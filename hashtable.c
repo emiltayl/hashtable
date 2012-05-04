@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-unsigned long get_hash(char *string) {
+unsigned long hash_get_value(char *string) {
 	unsigned long hash_value = 5381;
 
 	while (*string != '\0') {
@@ -14,8 +14,8 @@ unsigned long get_hash(char *string) {
 	return hash_value;
 }
 
-unsigned int get_hash_table_position(hash_table_t *hash_table, char *string) {
-    unsigned long hash_value = get_hash(string);
+unsigned int hash_table_get_position(hash_table_t *hash_table, char *string) {
+    unsigned long hash_value = hash_get_value(string);
 
     unsigned int position = hash_value % (1 << hash_table->exponent);
     if (position < hash_table->next_split) {
@@ -25,7 +25,7 @@ unsigned int get_hash_table_position(hash_table_t *hash_table, char *string) {
     return position;
 }
 
-hash_table_t *get_hash_table(int size) {
+hash_table_t *hash_table_create(int size) {
     if (size < 1) {
         return NULL; //We don't want to have to deal with the special case of empty tables
     }
@@ -59,8 +59,8 @@ hash_table_t *get_hash_table(int size) {
     return hash_table;
 }
 
-int has_hash_table_element(hash_table_t *hash_table, char *string) {
-    unsigned int position = get_hash_table_position(hash_table, string);
+int hash_table_has_element(hash_table_t *hash_table, char *string) {
+    unsigned int position = hash_table_get_position(hash_table, string);
     hash_table_list_t *list = hash_table->elements[position];
 
     while (list != NULL) {
@@ -73,8 +73,8 @@ int has_hash_table_element(hash_table_t *hash_table, char *string) {
     return 0; 
 }
 
-hash_table_list_t *get_hash_table_element(hash_table_t *hash_table, char *string) {
-    unsigned int position = get_hash_table_position(hash_table, string);
+hash_table_list_t *hash_table_get_element(hash_table_t *hash_table, char *string) {
+    unsigned int position = hash_table_get_position(hash_table, string);
     hash_table_list_t *list = hash_table->elements[position];
 
     while (list != NULL) {
@@ -87,12 +87,12 @@ hash_table_list_t *get_hash_table_element(hash_table_t *hash_table, char *string
     return NULL;
 }
 
-hash_table_list_t *add_hash_table_element(hash_table_t *hash_table, char *string) {
-    if (has_hash_table_element(hash_table, string)) {
-        return get_hash_table_element(hash_table, string);
+hash_table_list_t *hash_table_add_element(hash_table_t *hash_table, char *string) {
+    if (hash_table_has_element(hash_table, string)) {
+        return hash_table_get_element(hash_table, string);
     }
 
-    unsigned int position = get_hash_table_position(hash_table, string);
+    unsigned int position = hash_table_get_position(hash_table, string);
 	hash_table_list_t *new_element = (hash_table_list_t *) malloc(sizeof(hash_table_list_t));
     if (new_element == NULL) {
         return NULL;
@@ -132,7 +132,7 @@ hash_table_list_t *add_hash_table_element(hash_table_t *hash_table, char *string
         hash_table_list_t **new_element = &(hash_table->elements[hash_table->size-1]);
 
         while (*old_element != NULL) {
-            if (get_hash_table_position(hash_table, (*old_element)->string) != hash_table->next_split) {
+            if (hash_table_get_position(hash_table, (*old_element)->string) != hash_table->next_split) {
                 *new_element = *old_element;
                 old_element = &((*old_element)->next);
                 (*new_element)->next = NULL;
@@ -152,9 +152,9 @@ hash_table_list_t *add_hash_table_element(hash_table_t *hash_table, char *string
     return new_element;
 }
 
-void remove_hash_table_element(hash_table_t *hash_table, char *string) {
+void hash_table_remove_element(hash_table_t *hash_table, char *string) {
     //TODO: Possibly shrink the table when it is filled less than x%?
-    unsigned int position = get_hash_table_position(hash_table, string);
+    unsigned int position = hash_table_get_position(hash_table, string);
     
     hash_table_list_t *prev = NULL;
     hash_table_list_t *list = hash_table->elements[position];
@@ -177,7 +177,7 @@ void remove_hash_table_element(hash_table_t *hash_table, char *string) {
     }
 }
 
-void free_hash_table(hash_table_t *hash_table) {
+void hash_table_free(hash_table_t *hash_table) {
     int i;
     hash_table_list_t *list_item, *next;
     for (i = 0; i < hash_table->size; i++) {
