@@ -6,7 +6,7 @@
 #define HASH_TABLE_GROW_SIZE 0.75
 //Decrease the size of the table when the ratio between the number of stored
 //elements and the number of slots is less than this.
-#define HASH_TABLE_SHRINK_SIZE 0.6
+#define HASH_TABLE_SHRINK_SIZE 0.4
 
 typedef struct _hash_table_list {
 	char *string;

@@ -153,7 +153,6 @@ hash_table_list_t *hash_table_add_element(hash_table_t *hash_table, char *string
 }
 
 void hash_table_remove_element(hash_table_t *hash_table, char *string) {
-    //TODO: Possibly shrink the table when it is filled less than x%?
     unsigned int position = hash_table_get_position(hash_table, string);
     
     hash_table_list_t *prev = NULL;
@@ -175,6 +174,33 @@ void hash_table_remove_element(hash_table_t *hash_table, char *string) {
         prev = list;
         list = list->next;
     }
+
+	if (((float) hash_table->n_elements/hash_table->size) < HASH_TABLE_SHRINK_SIZE) {
+		//The hash table is so small that we can shrink it
+		hash_table->size--;
+		hash_table_list_t *hash_table_element = hash_table->elements[hash_table->size];
+		if (hash_table_element != NULL) {
+			//The position we want to insert into isn't empty, and we have to
+			//move it to the correct position.
+			hash_table_list_t **insert_position = &(hash_table->elements[hash_table->size >> 1]);
+			while ((*insert_position) != NULL) {
+				insert_position = &((*insert_position)->next);
+			}
+			*insert_position = hash_table_element;
+		}
+
+		if (hash_table->size == 0) {
+			hash_table->exponent--;
+			hash_table->next_split = hash_table->size-1;
+		} else {
+			hash_table->next_split--;
+		}
+
+		hash_table_list_t **elements = (hash_table_list_t **) realloc(hash_table->elements, (hash_table->size) * sizeof(hash_table_list_t));
+        if (elements != NULL) {
+			hash_table->elements = elements;
+        }
+	}
 }
 
 void hash_table_free(hash_table_t *hash_table) {
