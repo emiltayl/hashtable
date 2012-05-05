@@ -134,16 +134,16 @@ hash_table_list_t *hash_table_add_element(hash_table_t *hash_table, char *string
         while (*old_element != NULL) {
             if (hash_table_get_position(hash_table, (*old_element)->string) != hash_table->next_split) {
                 *new_element = *old_element;
-                old_element = &((*old_element)->next);
-                (*new_element)->next = NULL;
+				*old_element = (*old_element)->next;
                 new_element = &((*new_element)->next);
+                *new_element = NULL;
             } else {
                 old_element = &((*old_element)->next);
             }
         }
         hash_table->next_split++;
         
-        if ((1 << hash_table->exponent) >= hash_table->size) {
+        if ((1 << (hash_table->exponent + 1)) <= hash_table->size) {
             hash_table->exponent++;
             hash_table->next_split = 0;
         }
