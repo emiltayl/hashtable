@@ -131,8 +131,9 @@ hash_table_list_t *hash_table_add_element(hash_table_t *hash_table, char *string
         hash_table_list_t **old_element = &(hash_table->elements[hash_table->next_split]);
         hash_table_list_t **new_element = &(hash_table->elements[hash_table->size-1]);
 
+        hash_table->next_split++;
         while (*old_element != NULL) {
-            if (hash_table_get_position(hash_table, (*old_element)->string) != hash_table->next_split) {
+            if (hash_table_get_position(hash_table, (*old_element)->string) != hash_table->next_split - 1) {
                 *new_element = *old_element;
 				*old_element = (*old_element)->next;
                 new_element = &((*new_element)->next);
@@ -141,7 +142,6 @@ hash_table_list_t *hash_table_add_element(hash_table_t *hash_table, char *string
                 old_element = &((*old_element)->next);
             }
         }
-        hash_table->next_split++;
         
         if ((1 << (hash_table->exponent + 1)) <= hash_table->size) {
             hash_table->exponent++;
