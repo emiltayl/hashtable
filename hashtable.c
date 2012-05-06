@@ -179,21 +179,25 @@ void hash_table_remove_element(hash_table_t *hash_table, char *string) {
 		//The hash table is so small that we can shrink it
 		hash_table->size--;
 		hash_table_list_t *hash_table_element = hash_table->elements[hash_table->size];
-		if (hash_table_element != NULL) {
-			//The position we want to insert into isn't empty, and we have to
-			//move it to the correct position.
-			hash_table_list_t **insert_position = &(hash_table->elements[hash_table->size >> 1]);
-			while ((*insert_position) != NULL) {
-				insert_position = &((*insert_position)->next);
-			}
-			*insert_position = hash_table_element;
-		}
+		hash_table_list_t *hash_table_previous_element = hash_table_element;
+		hash_table_list_t **insertion_point;
 
-		if (hash_table->size == 0) {
+		if ((1 << hash_table->exponent) > hash_table->size) {
 			hash_table->exponent--;
-			hash_table->next_split = hash_table->size-1;
+			hash_table->next_split = 1 << hash_table->exponent;
 		} else {
 			hash_table->next_split--;
+		}
+
+		while (hash_table_element != NULL) {
+			insertion_point = &(hash_table->elements[hash_table_get_position(hash_table, hash_table_element->string)]);
+			while (*insertion_point != NULL) {
+				insertion_point = &((*insertion_point)->next);
+			}
+			*insertion_point = hash_table_element;
+			hash_table_element = hash_table_element->next;
+			hash_table_previous_element->next = NULL;
+			hash_table_previous_element = hash_table_element;
 		}
 
 		hash_table_list_t **elements = (hash_table_list_t **) realloc(hash_table->elements, (hash_table->size) * sizeof(hash_table_list_t));
