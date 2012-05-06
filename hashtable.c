@@ -184,7 +184,7 @@ void hash_table_remove_element(hash_table_t *hash_table, char *string) {
 
 		if ((1 << hash_table->exponent) > hash_table->size) {
 			hash_table->exponent--;
-			hash_table->next_split = 1 << hash_table->exponent;
+			hash_table->next_split = (1 << hash_table->exponent) - 1;
 		} else {
 			hash_table->next_split--;
 		}
