@@ -53,7 +53,7 @@ hash_table_t *hash_table_create(int size) {
         hash_table->exponent++;
     }
 
-    hash_table->next_split = 0;
+    hash_table->next_split = hash_table->size - (1 << hash_table->exponent);
     hash_table->n_elements = 0;
 
     return hash_table;
