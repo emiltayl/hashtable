@@ -108,16 +108,22 @@ hash_table_list_t *hash_table_get_element(hash_table_t *hash_table, char *string
 }
 
 hash_table_list_t *hash_table_add_element(hash_table_t *hash_table, char *string) {
+	//If the hash table already has an element with the same key we're trying
+	//to insert, simply return the entry already in the hash table.
     if (hash_table_has_element(hash_table, string)) {
         return hash_table_get_element(hash_table, string);
     }
 
     unsigned int position = hash_table_get_position(hash_table, string);
+	//Allocate memory for the new entry, return NULL if we didn't manage to
+	//allocate the memory.
 	hash_table_list_t *new_element = (hash_table_list_t *) malloc(sizeof(hash_table_list_t));
     if (new_element == NULL) {
         return NULL;
     }
 
+	//Try to allocate space for the key, return NULL on failure. On success, we
+	//copy the string to the new position.
     int length = strlen(string) + 1;
     new_element->string = (char *) malloc(sizeof(char) * length);
     if (new_element->string == NULL) {
@@ -128,6 +134,12 @@ hash_table_list_t *hash_table_add_element(hash_table_t *hash_table, char *string
 
     new_element->next = NULL;
 
+	//Now we have to find out where to insert the new entry, in case something
+	//else already is on that specific position in the hash table.
+	//It might be confusing with all the pointers, list_element is the position
+	//we want to try to insert the element at. If the pointer pointed to by
+	//list_element is not NULL, we have to check the next element in the list
+	//until we find a free position to insert the new entry.
     hash_table_list_t **list_element = &(hash_table->elements[position]);
     while (*list_element != NULL) {
         list_element = &((*list_element)->next);
@@ -136,23 +148,33 @@ hash_table_list_t *hash_table_add_element(hash_table_t *hash_table, char *string
     *list_element = new_element;
     hash_table->n_elements++;
 
+	//Next we check if the hash table has so many entries that we should
+	//increase its size.
     if (((float) hash_table->n_elements/hash_table->size) > HASH_TABLE_GROW_SIZE) {
-        //There are so many entries that we should grow the table
+		//The first thing we do is try to allocate enough space for
+		//another pointer in the elements-array. If we can't, we just give up
+		//trying to increase the size.
         hash_table_list_t **elements = (hash_table_list_t **) realloc(hash_table->elements, (hash_table->size + 1) * sizeof(hash_table_list_t *));
         if (elements == NULL) {
-            //We couldn't increase the size of the list, maybe we should have
-            //a way of handling errors?
             return new_element;
         }
+		//The pointer might have been changed to a new location, so we just
+		//overwrite it.
         hash_table->elements = elements;
 		hash_table->elements[hash_table->size] = NULL;
         hash_table->size++;
 
+		//Now it's time to split the cell. Here old_element is a pointer to
+		//the elements we have to check whether we should move or not, and
+		//new_element is a pointer to the position we eventually should insert
+		//old_element at.
         hash_table_list_t **old_element = &(hash_table->elements[hash_table->next_split]);
         hash_table_list_t **new_element = &(hash_table->elements[hash_table->size-1]);
 
         hash_table->next_split++;
         while (*old_element != NULL) {
+			//Now that size is updated, hash_table_get_position will either
+			//return the old location (we should not move, or the new location.
             if (hash_table_get_position(hash_table, (*old_element)->string) != hash_table->next_split - 1) {
                 *new_element = *old_element;
 				*old_element = (*old_element)->next;
@@ -163,6 +185,9 @@ hash_table_list_t *hash_table_add_element(hash_table_t *hash_table, char *string
             }
         }
         
+		//If we just split the element created last time we increased the
+		//exponent, we increase the exponent and set the next cell to be split
+		//to be 0.
         if ((1 << (hash_table->exponent + 1)) <= hash_table->size) {
             hash_table->exponent++;
             hash_table->next_split = 0;
