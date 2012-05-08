@@ -78,6 +78,8 @@ int hash_table_has_element(hash_table_t *hash_table, char *string) {
     unsigned int position = hash_table_get_position(hash_table, string);
     hash_table_list_t *list = hash_table->elements[position];
 
+	//Loop through all the entries in this cell, return 1 if we find what we're
+	//looking for, 0 otherwise.
     while (list != NULL) {
         if (strcmp(string, list->string) == 0) {
             return 1;
