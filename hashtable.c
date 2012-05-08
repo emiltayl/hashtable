@@ -4,9 +4,12 @@
 #include <string.h>
 
 unsigned long hash_get_value(char *string) {
+	//Magic initial number, copied from the internet
 	unsigned long hash_value = 5381;
 
 	while (*string != '\0') {
+		//Multiply hash_value by 33 (hash_value << 5 + hash_value) and add the
+		//value of the current character
 		hash_value = *string + ((hash_value << 5) + hash_value);
 		string++;
 	}
