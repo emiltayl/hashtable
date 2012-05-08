@@ -4,12 +4,12 @@
 #include <string.h>
 
 unsigned long hash_get_value(char *string) {
-	//Magic initial number, copied from the internet
+	//Magic initial number, found in article about hash algorithm.
 	unsigned long hash_value = 5381;
 
 	while (*string != '\0') {
 		//Multiply hash_value by 33 (hash_value << 5 + hash_value) and add the
-		//value of the current character
+		//value of the current character.
 		hash_value = *string + ((hash_value << 5) + hash_value);
 		string++;
 	}
@@ -23,7 +23,7 @@ unsigned int hash_table_get_position(hash_table_t *hash_table, char *string) {
     unsigned int position = hash_value % (1 << hash_table->exponent);
 	//If we're about to put the string in a cell that has been split since the
 	//last time exponent was increased, we have to calculate the position with
-	//hash_value modulo (exponent + 1)
+	//hash_value modulo (exponent + 1).
     if (position < hash_table->next_split) {
         position = hash_value % (1 << (hash_table->exponent + 1));
     }
@@ -32,22 +32,31 @@ unsigned int hash_table_get_position(hash_table_t *hash_table, char *string) {
 }
 
 hash_table_t *hash_table_create(int size) {
+	//The first thing we check is whether we're trying to create a table with a
+	//valid size (greater than 0), if not we simply return NULL, as we could
+	//not create a table with the requested size.
     if (size < 1) {
-        return NULL; //We don't want to have to deal with the special case of empty tables
+        return NULL;
     }
     int i;
 
+	//Allocate memory for the hash_table_t struct. If we can't allocate the
+	//memory we return NULL.
     hash_table_t *hash_table = (hash_table_t *) malloc(sizeof(hash_table_t));
     if (hash_table == NULL) {
         return NULL;
     }
     
+	//Next we need to allocate enough room for the pointers to all the elements
+	//in the hash table. If this fails we also return NULL.
     hash_table->elements = (hash_table_list_t **) malloc(sizeof(hash_table_list_t *) * size);
     if (hash_table->elements == NULL) {
         free(hash_table);
         return NULL;
     }
 
+	//Do initialising, set default and initial values. Empty cells are simply
+	//NULL pointers.
     for (i = 0; i < size; i++) {
         hash_table->elements[i] = NULL;
     }
