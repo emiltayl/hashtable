@@ -200,6 +200,10 @@ hash_table_list_t *hash_table_add_element(hash_table_t *hash_table, char *string
 void hash_table_remove_element(hash_table_t *hash_table, char *string) {
     unsigned int position = hash_table_get_position(hash_table, string);
     
+    //The first thing we need to do is to search for the element we're looking
+    //for. We also keep track of the previous entry in the list at that
+    //position (if any), so that we can easily set the previous element's
+    //"next" to the next of the element we're deleting.
     hash_table_list_t *prev = NULL;
     hash_table_list_t *list = hash_table->elements[position];
     while (list != NULL) {
@@ -220,13 +224,16 @@ void hash_table_remove_element(hash_table_t *hash_table, char *string) {
         list = list->next;
     }
 
+    //Next we check to see if there are so few elements in the table that we
+    //can shrink it.
 	if (((float) hash_table->n_elements/hash_table->size) < HASH_TABLE_SHRINK_SIZE) {
-		//The hash table is so small that we can shrink it
 		hash_table->size--;
 		hash_table_list_t *hash_table_element = hash_table->elements[hash_table->size];
 		hash_table_list_t *hash_table_previous_element = hash_table_element;
 		hash_table_list_t **insertion_point;
 
+        //We need to check if decreasing the size of the table causes the
+        //exponent to decrease.
 		if ((1 << hash_table->exponent) > hash_table->size) {
 			hash_table->exponent--;
 			hash_table->next_split = (1 << hash_table->exponent) - 1;
@@ -234,17 +241,28 @@ void hash_table_remove_element(hash_table_t *hash_table, char *string) {
 			hash_table->next_split--;
 		}
 
+        //For each of the elements in the cell we're removing, find the new
+        //cell it should go to, and then put it at the end of that cell's list.
+        //TODO: Possibly move it to the first position to increase performance
+        //when shrinking.
 		while (hash_table_element != NULL) {
 			insertion_point = &(hash_table->elements[hash_table_get_position(hash_table, hash_table_element->string)]);
 			while (*insertion_point != NULL) {
 				insertion_point = &((*insertion_point)->next);
 			}
 			*insertion_point = hash_table_element;
+            //Go to the next element in the cell we're deleting, and set "next"
+            //for the element we just moved to NULL as it is the last element
+            //in it's cell.
 			hash_table_element = hash_table_element->next;
 			hash_table_previous_element->next = NULL;
 			hash_table_previous_element = hash_table_element;
 		}
 
+        //Try to free up some RAM as the list has shrunk by 1 cell. If we can't
+        //shrink the list, we'll just pretend that the list has been shrunk.
+        //This should not lead to any problems, as we won't end up with too
+        //little space anyways.
 		hash_table_list_t **elements = (hash_table_list_t **) realloc(hash_table->elements, (hash_table->size) * sizeof(hash_table_list_t *));
         if (elements != NULL) {
 			hash_table->elements = elements;
