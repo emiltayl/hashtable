@@ -124,7 +124,7 @@ hash_table_list_t *hash_table_add_element(hash_table_t *hash_table, char *string
 
 	//Try to allocate space for the key, return NULL on failure. On success, we
 	//copy the string to the new position.
-    int length = strlen(string) + 1;
+    size_t length = strlen(string) + 1;
     new_element->string = (char *) malloc(sizeof(char) * length);
     if (new_element->string == NULL) {
         free(new_element);
