@@ -253,7 +253,7 @@ void hash_table_remove_element(hash_table_t *hash_table, char *string) {
 }
 
 void hash_table_free(hash_table_t *hash_table) {
-    int i;
+    size_t i;
     hash_table_list_t *list_item, *next;
     for (i = 0; i < hash_table->size; i++) {
         list_item = hash_table->elements[i];
