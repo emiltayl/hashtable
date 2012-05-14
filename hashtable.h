@@ -27,7 +27,7 @@ typedef struct _hash_table {
 } hash_table_t;
 
 unsigned long hash_get_value(char *);
-unsigned int hash_table_get_position(hash_table_t *, char *);
+size_t hash_table_get_position(hash_table_t *, char *);
 hash_table_t *hash_table_create(int);
 int hash_table_has_element(hash_table_t *, char *);
 hash_table_list_t *hash_table_get_element(hash_table_t *, char *);

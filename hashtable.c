@@ -17,7 +17,7 @@ unsigned long hash_get_value(char *string) {
 	return hash_value;
 }
 
-unsigned int hash_table_get_position(hash_table_t *hash_table, char *string) {
+size_t hash_table_get_position(hash_table_t *hash_table, char *string) {
     unsigned long hash_value = hash_get_value(string);
 
     unsigned int position = hash_value % (1 << hash_table->exponent);
