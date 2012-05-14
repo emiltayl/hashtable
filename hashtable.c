@@ -198,7 +198,7 @@ hash_table_list_t *hash_table_add_element(hash_table_t *hash_table, char *string
 }
 
 void hash_table_remove_element(hash_table_t *hash_table, char *string) {
-    unsigned int position = hash_table_get_position(hash_table, string);
+    size_t position = hash_table_get_position(hash_table, string);
     
     hash_table_list_t *prev = NULL;
     hash_table_list_t *list = hash_table->elements[position];
