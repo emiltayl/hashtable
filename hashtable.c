@@ -20,7 +20,7 @@ unsigned long hash_get_value(char *string) {
 size_t hash_table_get_position(hash_table_t *hash_table, char *string) {
     unsigned long hash_value = hash_get_value(string);
 
-    unsigned int position = hash_value % (1 << hash_table->exponent);
+    size_t position = hash_value % (1 << hash_table->exponent);
 	//If we're about to put the string in a cell that has been split since the
 	//last time exponent was increased, we have to calculate the position with
 	//hash_value modulo (exponent + 1).
