@@ -38,7 +38,6 @@ hash_table_t *hash_table_create(int size) {
     if (size < 1) {
         return NULL;
     }
-    int i;
 
 	//Allocate memory for the hash_table_t struct. If we can't allocate the
 	//memory we return NULL.
@@ -57,6 +56,7 @@ hash_table_t *hash_table_create(int size) {
 
 	//Do initialising, set default and initial values. Empty cells are simply
 	//NULL pointers.
+    int i;
     for (i = 0; i < size; i++) {
         hash_table->elements[i] = NULL;
     }
