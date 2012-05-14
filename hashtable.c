@@ -17,10 +17,10 @@ unsigned long hash_get_value(char *string) {
 	return hash_value;
 }
 
-unsigned int hash_table_get_position(hash_table_t *hash_table, char *string) {
+size_t hash_table_get_position(hash_table_t *hash_table, char *string) {
     unsigned long hash_value = hash_get_value(string);
 
-    unsigned int position = hash_value % (1 << hash_table->exponent);
+    size_t position = hash_value % (1 << hash_table->exponent);
 	//If we're about to put the string in a cell that has been split since the
 	//last time exponent was increased, we have to calculate the position with
 	//hash_value modulo (exponent + 1).
@@ -38,7 +38,6 @@ hash_table_t *hash_table_create(int size) {
     if (size < 1) {
         return NULL;
     }
-    int i;
 
 	//Allocate memory for the hash_table_t struct. If we can't allocate the
 	//memory we return NULL.
@@ -57,6 +56,7 @@ hash_table_t *hash_table_create(int size) {
 
 	//Do initialising, set default and initial values. Empty cells are simply
 	//NULL pointers.
+    int i;
     for (i = 0; i < size; i++) {
         hash_table->elements[i] = NULL;
     }
@@ -75,7 +75,7 @@ hash_table_t *hash_table_create(int size) {
 }
 
 int hash_table_has_element(hash_table_t *hash_table, char *string) {
-    unsigned int position = hash_table_get_position(hash_table, string);
+    size_t position = hash_table_get_position(hash_table, string);
     hash_table_list_t *list = hash_table->elements[position];
 
 	//Loop through all the entries in the cell string should be in, return 1 if
@@ -91,7 +91,7 @@ int hash_table_has_element(hash_table_t *hash_table, char *string) {
 }
 
 hash_table_list_t *hash_table_get_element(hash_table_t *hash_table, char *string) {
-    unsigned int position = hash_table_get_position(hash_table, string);
+    size_t position = hash_table_get_position(hash_table, string);
     hash_table_list_t *list = hash_table->elements[position];
 
 	//Same as hash_table_has_element, loop through all the entries in the cell
@@ -114,7 +114,7 @@ hash_table_list_t *hash_table_add_element(hash_table_t *hash_table, char *string
         return hash_table_get_element(hash_table, string);
     }
 
-    unsigned int position = hash_table_get_position(hash_table, string);
+    size_t position = hash_table_get_position(hash_table, string);
 	//Allocate memory for the new entry, return NULL if we didn't manage to
 	//allocate the memory.
 	hash_table_list_t *new_element = (hash_table_list_t *) malloc(sizeof(hash_table_list_t));
@@ -124,7 +124,7 @@ hash_table_list_t *hash_table_add_element(hash_table_t *hash_table, char *string
 
 	//Try to allocate space for the key, return NULL on failure. On success, we
 	//copy the string to the new position.
-    int length = strlen(string) + 1;
+    size_t length = strlen(string) + 1;
     new_element->string = (char *) malloc(sizeof(char) * length);
     if (new_element->string == NULL) {
         free(new_element);
@@ -198,7 +198,7 @@ hash_table_list_t *hash_table_add_element(hash_table_t *hash_table, char *string
 }
 
 void hash_table_remove_element(hash_table_t *hash_table, char *string) {
-    unsigned int position = hash_table_get_position(hash_table, string);
+    size_t position = hash_table_get_position(hash_table, string);
     
     //The first thing we need to do is to search for the element we're looking
     //for. We also keep track of the previous entry in the list at that
@@ -271,7 +271,7 @@ void hash_table_remove_element(hash_table_t *hash_table, char *string) {
 }
 
 void hash_table_free(hash_table_t *hash_table) {
-    int i;
+    size_t i;
     //Walk over all the entries in all the cells and free all the data that has
     //been allocated.
     hash_table_list_t *list_item, *next;
