@@ -114,7 +114,7 @@ hash_table_list_t *hash_table_add_element(hash_table_t *hash_table, char *string
         return hash_table_get_element(hash_table, string);
     }
 
-    unsigned int position = hash_table_get_position(hash_table, string);
+    size_t position = hash_table_get_position(hash_table, string);
 	//Allocate memory for the new entry, return NULL if we didn't manage to
 	//allocate the memory.
 	hash_table_list_t *new_element = (hash_table_list_t *) malloc(sizeof(hash_table_list_t));
