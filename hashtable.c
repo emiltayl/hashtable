@@ -87,7 +87,7 @@ hash_table_list_t *hash_table_get_element(hash_table_t *hash_table, char *string
     return NULL;
 }
 
-hash_table_list_t *hash_table_add_element(hash_table_t *hash_table, char *string) {
+hash_table_list_t *hash_table_add_element(hash_table_t *hash_table, char *string, void *value) {
     if (hash_table_has_element(hash_table, string)) {
         return hash_table_get_element(hash_table, string);
     }
@@ -112,6 +112,8 @@ hash_table_list_t *hash_table_add_element(hash_table_t *hash_table, char *string
     while (*list_element != NULL) {
         list_element = &((*list_element)->next);
     }
+
+    new_element->value = value;
 
     *list_element = new_element;
     hash_table->n_elements++;
