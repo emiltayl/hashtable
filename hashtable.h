@@ -11,6 +11,7 @@
 typedef struct _hash_table_list {
 	char *string;
 	struct _hash_table_list *next;
+    void* value;
 } hash_table_list_t;
 
 typedef struct _hash_table {
@@ -26,7 +27,7 @@ unsigned int hash_table_get_position(hash_table_t *, char *);
 hash_table_t *hash_table_create(int);
 int hash_table_has_element(hash_table_t *, char *);
 hash_table_list_t *hash_table_get_element(hash_table_t *, char *);
-hash_table_list_t *hash_table_add_element(hash_table_t *, char *);
+hash_table_list_t *hash_table_add_element(hash_table_t *, char *, void *);
 void hash_table_remove_element(hash_table_t *, char *);
 void hash_table_free(hash_table_t *);
 
